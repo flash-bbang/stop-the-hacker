@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="해커가 디도스·랜섬웨어·제로데이로 쳐들어온다. 방화벽·EDR·IPS 깔아서 막아라. 털리면 시말서 ㅋ">
+<meta name="description" content="해커가 디도스·랜섬웨어·제로데이·APT로 20웨이브 쳐들어온다. 방화벽·EDR·IPS 깔아서 막아라. 털리면 시말서 ㅋ">
 <meta property="og:title" content="해커를 막아라! — 너는 1웨이브에 털림 ㅋ">
 <meta property="og:description" content="방화벽·웹방화벽·EDR·IPS·허니팟 깔아서 해커 공격 막는 디펜스. 털리면 사과문 + 시말서 ㅋㅋ">
 <meta property="og:image" content="https://flash-bbang.github.io/thumb_hack.jpg">
@@ -120,7 +120,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
 <body>
 <div id="app">
   <div id="hud">
-    <div class="stat"><small>WAVE</small><b id="wave">00/10</b></div>
+    <div class="stat"><small>WAVE</small><b id="wave">00/20</b></div>
     <div class="stat gold"><small>CREDIT</small><b>◈ <span id="goldN">0</span></b></div>
     <div class="stat hp"><small>SERVER</small><b id="hpN">20</b><div class="hpbar" id="hpbar" aria-hidden="true"></div></div>
     <div class="sp"></div>
@@ -147,7 +147,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
       <p class="kicker">// SECURITY ALERT · 침입 탐지</p>
       <canvas class="face" id="stFace" width="260" height="260" aria-hidden="true"></canvas>
       <h1 class="glitch" data-t="해커를 막아라!">해커를 막아라!</h1>
-      <p class="term">&gt; 해커가 <b>디도스·웜·랜섬웨어</b> 전송 중<br>&gt; 보안 모듈 8종을 배치해 서버를 지켜라<br><span class="d">&gt; 목표: 10웨이브 방어 / 실패 시 시말서</span></p>
+      <p class="term">&gt; 해커가 <b>디도스·웜·랜섬웨어</b> 전송 중<br>&gt; 보안 모듈 8종을 배치해 서버를 지켜라<br><span class="d">&gt; 목표: 20웨이브 방어 / 실패 시 시말서</span><br>&gt; 막판 보스 잡으면 <b>해커 지갑 털기</b> (랜덤 보너스)</p>
       <div class="nick"><label for="nick">login:</label><input id="nick" maxlength="12" autocomplete="nickname" placeholder="보안담당자 닉네임" enterkeyhint="go"></div>
       <div id="nickWarn" class="nickwarn" role="alert"></div>
       <button class="btn" id="startBtn" type="button">출근하기</button>
@@ -173,7 +173,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
       <p class="kicker">// THREAT NEUTRALIZED</p>
       <canvas class="face" id="wFace" width="260" height="260" aria-hidden="true"></canvas>
       <p class="glitch ok" data-t="해커 검거 완료!">해커 검거 완료!</p>
-      <p class="term">&gt; 10웨이브 전부 차단<br>&gt; 연봉 협상 권한 획득</p>
+      <p class="term">&gt; 20웨이브 전부 차단<br>&gt; 연봉 협상 권한 획득<br><span id="wJack"></span></p>
       <div class="big" id="wScore">0</div>
       <div class="myrank" id="myRank2"></div>
       <button class="btn" id="againBtn2" type="button">한 판 더</button>
@@ -221,7 +221,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
     ddos: {name:'안티디도스', code:'ADS', cost:90, range:68, rate:1.1, dmg:8, color:'#2de2ff', tag:'범위 · 디도스 3배', bonus:{ddos:3}, aoe:true, desc:'이중 충격파로 주변 트래픽을 정화. 디도스에 3배.'},
     honey:{name:'허니팟', code:'HONEY', cost:60, range:84, rate:1.4, dmg:4, color:'#ffb020', tag:'꿀 웅덩이 감속', slow:.45, desc:'꿀단지를 던져 웅덩이를 만들어요. 밟은 공격은 느려져요.'},
     ips:  {name:'IPS', code:'IPS', cost:110, range:95, rate:.85, dmg:14, color:'#a77bff', tag:'연쇄 · 은신 탐지', chain:3, detect:true, desc:'번개로 3개까지 연쇄 공격. 탐지한 은신은 모든 모듈이 공격할 수 있어요.'},
-    edr:  {name:'EDR', code:'EDR', cost:140, range:150, rate:1.8, dmg:70, color:'#e8f6ff', tag:'저격 · 은신 탐지', bonus:{ransom:2, zero:2, boss:2}, sniper:true, detect:true, desc:'목표를 조준해 원거리 저격. 랜섬·제로데이·보스에 2배, 은신 탐지.'},
+    edr:  {name:'EDR', code:'EDR', cost:140, range:150, rate:1.8, dmg:70, color:'#e8f6ff', tag:'저격 · 은신 탐지', bonus:{ransom:2, zero:2, apt:2, boss:2}, sniper:true, detect:true, desc:'목표를 조준해 원거리 저격. 랜섬·제로데이·APT·보스에 2배, 은신 탐지.'},
   };
   const ENEMY = {
     spam:  {name:'스팸 메일', hp:28, spd:42, rew:5, dmg:1, r:9, color:'#ff5fa2'},
@@ -233,23 +233,36 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
     sqli:  {name:'SQL 인젝션', hp:60, spd:50, rew:9, dmg:3, r:10, color:'#ff8a3d', armor:.5},
     zero:  {name:'제로데이', hp:90, spd:48, rew:14, dmg:4, r:11, color:'#c9d6ff', stealth:true},
     ransom:{name:'랜섬웨어', hp:170, spd:27, rew:16, dmg:5, r:13, color:'#b07cff', armor:.5},
+    apt:   {name:'APT 그룹', hp:420, spd:30, rew:30, dmg:6, r:12, color:'#ff7ad9', armor:.5, stealth:true},
     boss:  {name:'봇넷', hp:2600, spd:18, rew:250, dmg:20, r:24, color:'#ff2bd6', armor:.3},
   };
   const WAVES = [
-    [['spam', 8, .9]],
-    [['spam', 6, .8], ['ddos', 14, .22]],
+    [['spam', 10, .8]],
+    [['spam', 8, .8], ['ddos', 12, .3]],
     [['worm', 6, 1.0], ['xss', 8, .5]],
-    [['ddos', 26, .16], ['phish', 6, .7]],
-    [['sqli', 6, .9], ['ransom', 2, 2.2]],
-    [['zero', 4, 1.4], ['worm', 8, .7]],
-    [['ransom', 5, 1.5], ['sqli', 8, .6], ['xss', 10, .3]],
-    [['ddos', 40, .12], ['phish', 10, .45], ['zero', 4, 1.0]],
-    [['ransom', 6, 1.1], ['worm', 10, .6], ['zero', 6, .8], ['sqli', 8, .5]],
-    [['ddos', 24, .14], ['boss', 1, 1], ['ransom', 4, 1.4], ['zero', 4, 1]],
+    [['ddos', 32, .14], ['phish', 8, .6]],
+    [['sqli', 8, .8], ['ransom', 3, 1.8]],
+    [['zero', 5, 1.2], ['worm', 10, .6]],
+    [['ransom', 6, 1.3], ['sqli', 10, .5], ['xss', 14, .25]],
+    [['ddos', 50, .1], ['phish', 12, .4], ['zero', 5, .9]],
+    [['ransom', 8, 1.0], ['worm', 12, .5], ['zero', 7, .7], ['sqli', 10, .45]],
+    [['ddos', 30, .12], ['boss', 1, 1], ['ransom', 5, 1.2], ['zero', 5, .9]],
+    [['apt', 2, 3], ['phish', 16, .35], ['xss', 16, .25]],
+    [['worm', 16, .45], ['ddos', 40, .1], ['apt', 2, 2.5]],
+    [['sqli', 16, .4], ['ransom', 8, .9], ['zero', 8, .7]],
+    [['ddos', 70, .08], ['xss', 20, .22]],
+    [['apt', 5, 2], ['ransom', 10, .8], ['phish', 14, .35]],
+    [['zero', 14, .5], ['worm', 16, .4], ['sqli', 14, .35]],
+    [['ransom', 14, .7], ['apt', 4, 1.6], ['ddos', 50, .09]],
+    [['xss', 30, .18], ['phish', 20, .3], ['zero', 12, .5], ['apt', 4, 1.5]],
+    [['apt', 8, 1.2], ['ransom', 14, .6], ['worm', 20, .35], ['ddos', 60, .08]],
+    [['ddos', 40, .1], ['boss', 2, 6], ['apt', 6, 1.2], ['zero', 10, .5], ['ransom', 10, .7]],
   ];
+  const LAST = WAVES.length, hasBoss = i => !!WAVES[i] && WAVES[i].some(w => w[0] === 'boss');
+  const hpMult = w => 1 + (w - 1) * .35 + Math.max(0, w - 6) * .35, spdMult = w => 1 + (w - 1) * .02;
   const TAUNT = {
     start:['ㅋㅋ 방화벽 그게 다야?', '비번 1234 맞지?', '오늘 서버 털러 옴', '디도스 간다~'],
-    zero:'제로데이 간다 ㅋ 안 보이지?', sqli:"' OR 1=1 -- ㅋㅋ", boss:'봇넷 총출동!! 끝이다 ㅋㅋ',
+    zero:'제로데이 간다 ㅋ 안 보이지?', apt:'APT 그룹 투입 ㅋㅋ 몰랐지?', final:'최종 봇넷 2대 간다!! 끝이다 ㅋㅋ', sqli:"' OR 1=1 -- ㅋㅋ", boss:'봇넷 총출동!! 끝이다 ㅋㅋ',
     leak:['털었다 ㅋ', '고객정보 GET', '보안 왜 이래 ㅋㅋ', '구멍 숭숭 ㅋ'],
     cleared:['…운 좋았네', '다음엔 안 봐줌', '보안팀 좀 하네?'],
   };
@@ -336,6 +349,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
     else if (e.k === 'xss' || e.k === 'sqli'){ rr(c, -r - 2, -r * .65, r * 2 + 4, r * 1.3, 3); c.fill(); c.stroke(); c.fillStyle = col; c.font = `${e.k === 'xss' ? 9 : 7.5}px ${MONO}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(e.k === 'xss' ? '<x>' : 'SQL', 0, .5); }
     else if (e.k === 'worm' || e.k === 'mini'){ for (let i = 2; i >= 0; i--){ c.beginPath(); c.arc(Math.sin(t / 100 + i) * 2, -i * r * .7, r * (1 - i * .18), 0, 7); c.fill(); c.stroke(); } c.fillStyle = col; c.fillRect(-3.5, -1, 2, 2); c.fillRect(1.5, -1, 2, 2); }
     else if (e.k === 'zero'){ c.beginPath(); c.moveTo(0, -r); c.lineTo(r, 0); c.lineTo(0, r); c.lineTo(-r, 0); c.closePath(); c.fill(); c.stroke(); c.fillStyle = col; c.font = `7px ${MONO}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('0day', 0, .5); }
+    else if (e.k === 'apt'){ c.beginPath(); for (let i = 0; i < 8; i++){ const a = Math.PI / 8 + i * Math.PI / 4; c.lineTo(Math.cos(a) * r, Math.sin(a) * r); } c.closePath(); c.fill(); c.stroke(); c.fillStyle = col; c.font = `7px ${MONO}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('APT', 0, .5); }
     else if (e.k === 'ransom'){ c.beginPath(); c.arc(0, -r * .35, r * .55, Math.PI, 0); c.stroke(); rr(c, -r, -r * .35, r * 2, r * 1.3, 3); c.fill(); c.stroke(); c.fillStyle = col; c.font = `11px ${MONO}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('$', 0, r * .3); }
     else { // botnet boss
       const b = Math.sin(t / 150) * 2;
@@ -416,7 +430,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
   const ARP = [[57, 60, 64, 69], [53, 57, 60, 65], [55, 59, 62, 67], [52, 56, 59, 64]];
   function schedule(){
     if (!ac || ac.state !== 'running' || !musicOn){ if (ac) nextT = ac.currentTime + .05; return; }
-    const S16 = 60 / (118 + (wave >= 10 ? 20 : 0)) / 4;
+    const S16 = 60 / (118 + Math.min(30, wave * 1.5)) / 4;
     while (nextT < ac.currentTime + .15){
       const bar = Math.floor(step / 16) % 4, s = step % 16, ch = ARP[bar];
       tone(mtof(ch[s % 4] + 12), nextT, S16 * .9, 'square', .02, musicBus);
@@ -431,25 +445,26 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
   // ================= state =================
   let state = 'title', wave = 0, gold = 0, hp = 20, kills = 0, score = 0, best = store.get('hk-best', 0);
   let towers = [], enemies = [], shots = [], beams = [], puddles = [], pulses = [], parts = [], texts = [], spawnQ = [], waveActive = false, speedX = 1, sel = null, choice = null, bubble = null, shake = 0, hurtAt = -9999;
+  let jps = [], jackTotal = 0;
   let now = performance.now(), last = now, simT = 0, blocked = 0, lastLog = 0, skillReady = {}, skillUntil = {}, scanAt = -9999;
   function say(text, ms = 2200){ bubble = {text, until: simT + ms}; }
   function floatText(text, x, y, color = '#d8ffe9', size = 14, ms = 900){ texts.push({text, x, y, color, size, at: simT, ms}); }
   const logEl = $('log');
   function log(msg, cls = ''){ const d = new Date(), p = n => String(n).padStart(2, '0'); logEl.textContent = `> ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())} ${msg}`; logEl.className = cls; }
   function hud(){
-    $('wave').textContent = `${String(wave).padStart(2, '0')}/10`; $('goldN').textContent = gold; $('hpN').textContent = Math.max(0, hp);
+    $('wave').textContent = `${String(wave).padStart(2, '0')}/${LAST}`; $('goldN').textContent = gold; $('hpN').textContent = Math.max(0, hp);
     $('hpbar').innerHTML = Array.from({length: 20}, (_, i) => `<i${i >= hp ? ' class="off"' : ''}></i>`).join('');
     if (!$('sheet').hidden) refreshSheet();
   }
   function newGame(){
-    wave = 0; gold = 130; hp = 20; kills = 0; score = 0; towers = []; enemies = []; shots = []; beams = []; puddles = []; pulses = []; parts = []; texts = []; skillReady = {}; skillUntil = {}; scanAt = -9999; spawnQ = []; waveActive = false; sel = null; choice = null; blocked = 0;
+    wave = 0; gold = 120; hp = 20; kills = 0; score = 0; towers = []; enemies = []; shots = []; beams = []; puddles = []; pulses = []; parts = []; texts = []; skillReady = {}; skillUntil = {}; scanAt = -9999; jps = []; jackTotal = 0; spawnQ = []; waveActive = false; sel = null; choice = null; blocked = 0;
     state = 'play'; musicOn = true; step = 0; closeSheet(); hud(); waveBtnPaint(); say('ㅋㅋ 보안팀 신입이네?', 2600); log('보안담당 로그인. 빈 칸에 보안 모듈을 배치하세요', 'info'); logPlay();
   }
   function waveDesc(i){ return WAVES[i].map(([k, n]) => `${ENEMY[k].name}×${n}`).join(' · '); }
   function waveBtnPaint(){
     const b = $('waveBtn'), hide = waveActive || state !== 'play' || wave >= WAVES.length; $('wavebar').hidden = hide || !$('sheet').hidden;
     if (hide) return;
-    const stealth = WAVES[wave].some(([k]) => ENEMY[k].stealth), boss = wave + 1 === 10;
+    const stealth = WAVES[wave].some(([k]) => ENEMY[k].stealth), boss = hasBoss(wave);
     $('waveTxt').textContent = `▶ 웨이브 ${wave + 1} 시작${boss ? ' · 보스' : ''}`;
     $('waveNext').textContent = (stealth ? '⚠ 은신 포함 (IPS·EDR 필요) · ' : '') + waveDesc(wave);
     b.classList.toggle('alert', stealth || boss);
@@ -457,15 +472,15 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
   function startWave(){
     if (waveActive || state !== 'play' || wave >= WAVES.length) return;
     wave++; waveActive = true; spawnQ = []; let t = simT + 600;
-    const mult = 1 + (wave - 1) * .16, W0 = WAVES[wave - 1];
+    const mult = hpMult(wave), W0 = WAVES[wave - 1];
     for (const [k, n, gap] of W0){ for (let i = 0; i < n; i++){ spawnQ.push({k, at: t, mult}); t += gap * 1000; } t += 700; }
     spawnQ.sort((a, b) => a.at - b.at);
-    sfx(wave === 10 ? 'alarm' : 'wave');
-    const has = k => W0.some(w => w[0] === k);
-    say(wave === 10 ? TAUNT.boss : has('zero') ? TAUNT.zero : has('sqli') ? TAUNT.sqli : pick(TAUNT.start), 2400);
+    sfx(hasBoss(wave - 1) ? 'alarm' : 'wave');
+    const has = k => W0.some(w => w[0] === k), first = k => has(k) && !WAVES.slice(0, wave - 1).some(x => x.some(w => w[0] === k));
+    say(wave === LAST ? TAUNT.final : hasBoss(wave - 1) ? TAUNT.boss : first('apt') ? TAUNT.apt : first('zero') ? TAUNT.zero : first('sqli') ? TAUNT.sqli : pick(TAUNT.start), 2400);
     closeSheet(); log(`[ALERT] 웨이브 ${wave} 유입: ${waveDesc(wave - 1)}`, 'warn'); hud(); waveBtnPaint();
   }
-  function spawn(k, mult, d = 0){ const T = ENEMY[k], hpv = Math.round(T.hp * mult); enemies.push({k, hp: hpv, max: hpv, d, pos: posAt(d), slowUntil: 0, seen: false}); }
+  function spawn(k, mult, d = 0){ const T = ENEMY[k], hpv = Math.round(T.hp * mult); enemies.push({k, hp: hpv, max: hpv, d, pos: posAt(d), slowUntil: 0, seen: false, spd: T.spd * spdMult(Math.max(1, wave))}); }
   function damage(e, dmg, src){
     if (e.dead) return;
     const T = ENEMY[e.k];
@@ -475,10 +490,19 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
     if (e.hp <= 0){
       e.dead = true; kills++; blocked++; gold += T.rew; score += T.rew * 10; sfx('pop'); floatText(`+${T.rew}`, e.pos.x, e.pos.y - 10, '#ffb020', 11, 600);
       for (let i = 0; i < 7; i++){ const a = Math.random() * 7, v = 30 + Math.random() * 60; parts.push({x: e.pos.x, y: e.pos.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, at: simT, col: T.color}); }
-      if (e.k === 'worm'){ for (const o of [-6, 6]) spawn('mini', 1 + (wave - 1) * .16, Math.max(0, e.d + o)); }
-      if (e.k === 'boss'){ shake = 1.5; floatText('봇넷 격파!!', 180, 300, '#39ff88', 28, 1500); log('[KILL] 봇넷 C&C 서버 격파!', 'info'); }
+      if (e.k === 'worm'){ for (const o of [-6, 6]) spawn('mini', hpMult(wave), Math.max(0, e.d + o)); }
+      if (e.k === 'boss'){ shake = 1.5; floatText('봇넷 격파!!', 180, 300, '#39ff88', 28, 1500); log('[KILL] 봇넷 C&C 서버 격파!', 'info'); if (wave === LAST) jackpot(); }
       hud();
     }
+  }
+  // the final boss drops the hacker's crypto wallet: a slot roll decides how much you loot
+  const LOOT = [[1, '꽝 ㅋㅋ 1점', 2], [1004, '천사 금액 ㅋ', 24], [5000, '', 28], [12345, '', 20], [30000, '대박!', 14], [77777, '럭키 세븐!!', 8], [200000, '💰 JACKPOT 💰', 4]];
+  function jackpot(){
+    let r = Math.random() * LOOT.reduce((a, l) => a + l[2], 0), pickd = LOOT[0];
+    for (const l of LOOT){ if ((r -= l[2]) < 0){ pickd = l; break; } }
+    const [val, label] = pickd; score += val; jackTotal += val;
+    jps.push({at: simT, val, label, i: jps.length, done: false, tk: -1});
+    say(val >= 77777 ? '내 비트코인!!! 안 돼!!' : '내 지갑 건드리지 마!!', 2200);
   }
   const rangeOf = t => TOWERS[t.k].range * (1 + (t.lvl - 1) * .12);
   const SHOT_SPD = {fw: 380, spam: 400, waf: 460, av: 520};
@@ -492,7 +516,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
       if (e.dead) continue;
       for (const pd of puddles) if (pd.until > simT && Math.hypot(e.pos.x - pd.x, (e.pos.y - pd.y) / .7) < pd.r) e.slowUntil = simT + 250;
       const slow = e.slowUntil > simT ? (1 - TOWERS.honey.slow) : 1;
-      if (simT >= (skillUntil.cut || 0)) e.d += ENEMY[e.k].spd * slow * dt;
+      if (simT >= (skillUntil.cut || 0)) e.d += e.spd * slow * dt;
       e.pos = posAt(e.d);
       if (ENEMY[e.k].stealth) e.seen = simT < (skillUntil.scan || 0) || towers.some(t => TOWERS[t.k].detect && Math.hypot(e.pos.x - t.x, e.pos.y - t.y) <= rangeOf(t));
       if (e.poison && e.poison.until > simT){ damage(e, e.poison.dps * dt, 'av'); if (e.dead) continue; }
@@ -539,11 +563,14 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
     }
     shots = shots.filter(s => !s.done); enemies = enemies.filter(e => !e.dead);
     if (state !== 'play') return;
+    for (const j of jps){ if (j.done) continue; const age = simT - j.at;
+      if (age >= 1300){ j.done = true; sfx(j.val >= 30000 ? 'clear' : 'build'); if (j.val >= 77777) shake = 1.2; log(`[LOOT] 해커 지갑 털기: +${j.val.toLocaleString()}점 ${j.label}`, 'info'); }
+      else if (Math.floor(age / 80) !== j.tk){ j.tk = Math.floor(age / 80); sfx('shot'); } }
     if (blocked && simT - lastLog > 1400){ log(`[BLOCK] 공격 ${blocked}건 차단 완료`); blocked = 0; lastLog = simT; }
-    if (waveActive && !spawnQ.length && !enemies.length){
-      waveActive = false; const bonus = 25 + wave * 6; gold += bonus; score += wave * 500; sfx('clear');
+    if (waveActive && !spawnQ.length && !enemies.length && !jps.some(j => simT - j.at < 2800)){
+      waveActive = false; const bonus = 20 + wave * 4; gold += bonus; score += wave * 500; sfx('clear');
       floatText(`WAVE ${wave} CLEAR +◈${bonus}`, 180, 300, '#39ff88', 20, 1600); say(pick(TAUNT.cleared), 1800); hud();
-      if (wave >= WAVES.length) return winGame();
+      if (wave >= LAST) return winGame();
       log(`[OK] 웨이브 ${wave} 방어 성공. 보너스 ◈${bonus}`, 'info');
       waveBtnPaint();
     }
@@ -621,6 +648,15 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
     }
     texts = texts.filter(x => t - x.at < x.ms);
     for (const x of texts){ const k = (t - x.at) / x.ms; c.save(); c.globalAlpha = 1 - Math.max(0, k - .6) / .4; c.font = `${x.size}px ${MONO}`; c.textAlign = 'center'; c.lineWidth = 3; c.strokeStyle = DARK; c.strokeText(x.text, x.x, x.y - k * 16); c.fillStyle = x.color; c.fillText(x.text, x.x, x.y - k * 16); c.restore(); }
+    for (const j of jps){ const age = t - j.at; if (age > 2800) continue;
+      const rolling = age < 1300, y = MY + 190 + j.i * 78, pop = rolling ? 1 : 1 + Math.max(0, .25 - (age - 1300) / 800);
+      c.save(); c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+      c.fillStyle = 'rgba(3,6,10,.9)'; c.fillRect(36, y - 36, 288, 66); c.strokeStyle = rolling ? '#ffb020' : '#ffd23d'; c.lineWidth = rolling ? 1.5 : 2.5; c.strokeRect(36.5, y - 35.5, 287, 65);
+      c.font = `11px ${KO}`; c.fillStyle = '#ffb020'; c.fillText('// 해커 지갑 털기 ₿', 180, y - 19);
+      c.translate(180, y + 10); c.scale(pop, pop); c.font = `28px ${MONO}`; c.fillStyle = rolling ? '#e8f6ff' : '#ffd23d';
+      c.fillText(rolling ? '+' + String(Math.floor(Math.random() * 999999)).padStart(6, '0') : `+${j.val.toLocaleString()}`, 0, 0);
+      if (!rolling && j.label){ c.font = `12px ${KO}`; c.fillStyle = '#ff2bd6'; c.fillText(j.label, 0, 16); }
+      c.restore(); }
     if (state === 'play' && wave === 0 && !towers.length && !sel){ c.fillStyle = '#ffb020'; c.font = `13px ${KO}`; c.textAlign = 'center'; c.globalAlpha = .6 + .4 * Math.sin(rt / 250); c.fillText('[ 빈 칸을 눌러 보안 모듈 배치 ]', 180, MY + 6 * CELL - 14); c.globalAlpha = 1; }
   }
   function face(id, mood){ const c = $(id).getContext('2d'); c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, 260, 260); c.strokeStyle = mood === 'sad' ? '#39ff88' : '#ff2bd6'; c.globalAlpha = .4; c.lineWidth = 2; c.beginPath(); c.arc(130, 130, 124, 0, 7); c.stroke(); c.globalAlpha = 1; drawHacker(c, 130, 140, performance.now(), mood, 3); }
@@ -647,7 +683,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
     if (!sel) return;
     const tw = towerAt(sel.c, sel.r);
     if (tw){
-      const T = TOWERS[tw.k], up = Math.round(T.cost * .9 * tw.lvl), sell = Math.round(tw.spent * .6);
+      const T = TOWERS[tw.k], up = Math.round(T.cost * .9 * tw.lvl), sell = Math.round(tw.spent * .5);
       $('sheetTitle').textContent = `// ${T.name} (${T.code}) LV.${tw.lvl}`; $('towers').hidden = true; $('buildRow').hidden = true; $('tActions').hidden = false;
       $('info').innerHTML = `${T.desc}<br><span class="st">DMG ${Math.round(T.dmg * Math.pow(1.6, tw.lvl - 1))} · RANGE ${Math.round(rangeOf(tw))}${tw.lvl < 3 ? ` → 다음 DMG ${Math.round(T.dmg * Math.pow(1.6, tw.lvl))}` : ''}</span>`;
       $('upBtn').textContent = tw.lvl >= 3 ? 'MAX LEVEL' : `업그레이드 ◈${up}`; $('upBtn').disabled = tw.lvl >= 3 || gold < up;
@@ -668,7 +704,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
   }
   $('buildBtn').addEventListener('click', () => choice && build(choice));
   $('upBtn').addEventListener('click', () => { const tw = sel && towerAt(sel.c, sel.r); if (!tw) return; const up = Math.round(TOWERS[tw.k].cost * .9 * tw.lvl); if (tw.lvl >= 3 || gold < up) return; gold -= up; tw.spent += up; tw.lvl++; sfx('build'); floatText(`LV.${tw.lvl} PATCHED`, tw.x, tw.y - 18, '#ffb020', 12); log(`[PATCH] ${TOWERS[tw.k].name} LV.${tw.lvl} 업데이트`, 'info'); hud(); });
-  $('sellBtn').addEventListener('click', () => { const tw = sel && towerAt(sel.c, sel.r); if (!tw) return; gold += Math.round(tw.spent * .6); towers = towers.filter(t => t !== tw); closeSheet(); hud(); });
+  $('sellBtn').addEventListener('click', () => { const tw = sel && towerAt(sel.c, sel.r); if (!tw) return; gold += Math.round(tw.spent * .5); towers = towers.filter(t => t !== tw); closeSheet(); hud(); });
   $('sheetClose').addEventListener('click', closeSheet);
   cv.addEventListener('pointerdown', e => {
     if (state !== 'play') return;
@@ -687,16 +723,16 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
     scan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M7.5 11h7M11 7.5v7"/></svg>',
   };
   const SKILLS = [
-    {id:'patch', name:'긴급 패치', cd:30, dur:6, col:'#ffb020', desc:'6초간 모든 모듈 공격속도 2배', taunt:'패치를 이제 해? ㅋㅋ'},
-    {id:'cut', name:'망 분리', cd:45, dur:3, col:'#2de2ff', desc:'3초간 모든 공격 정지', taunt:'망 분리?? 반칙이잖아!'},
-    {id:'scan', name:'포렌식', cd:35, dur:6, col:'#ff2bd6', desc:'전체 피해 + 6초간 은신 노출', taunt:'헉 로그 지웠는데?!'},
+    {id:'patch', name:'긴급 패치', cd:40, dur:5, col:'#ffb020', desc:'5초간 모든 모듈 공격속도 2배', taunt:'패치를 이제 해? ㅋㅋ'},
+    {id:'cut', name:'망 분리', cd:60, dur:2.5, col:'#2de2ff', desc:'2.5초간 모든 공격 정지', taunt:'망 분리?? 반칙이잖아!'},
+    {id:'scan', name:'포렌식', cd:45, dur:6, col:'#ff2bd6', desc:'전체 피해 + 6초간 은신 노출', taunt:'헉 로그 지웠는데?!'},
   ];
   const sb = $('skillbar');
   for (const s of SKILLS){ const b = document.createElement('button'); b.type = 'button'; b.className = 'sk'; b.id = 'sk-' + s.id; b.style.setProperty('--sk', s.col); b.setAttribute('aria-label', `${s.name}: ${s.desc}`); b.innerHTML = `${ICO[s.id]}<span>${s.name}</span><span class="cd"></span>`; b.addEventListener('click', () => useSkill(s)); sb.appendChild(b); }
   function useSkill(s){
     if (state !== 'play' || !waveActive || simT < (skillReady[s.id] || 0)) return;
     skillReady[s.id] = simT + s.cd * 1000; skillUntil[s.id] = simT + s.dur * 1000;
-    if (s.id === 'scan'){ scanAt = simT; const hit = 40 * (1 + (wave - 1) * .16); enemies.slice().forEach(e => damage(e, hit, 'scan')); }
+    if (s.id === 'scan'){ scanAt = simT; const hit = 60 + wave * 6; enemies.slice().forEach(e => damage(e, hit, 'scan')); }
     sfx(s.id === 'cut' ? 'cut' : 'skill'); say(s.taunt, 1800); floatText(s.name + '!', 180, 230 + SKILLS.indexOf(s) * 34, s.col, 24, 1200); log(`[SKILL] ${s.name} 발동 — ${s.desc}`, 'info'); shake = .4;
   }
   function paintSkills(){
@@ -708,7 +744,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
   function gameOver(){
     state = 'over'; musicOn = false; setTimeout(() => sfx('over'), 200); closeSheet(); $('wavebar').hidden = true;
     score += kills * 5;
-    const big = wave <= 2 ? '출근 첫날 다 털림 ㅋㅋ' : wave <= 6 ? '고객정보 다 털림 ㅋㅋ' : '거의 막았는데 털림 ㅋ';
+    const big = wave <= 3 ? '출근 첫날 다 털림 ㅋㅋ' : wave <= 10 ? '고객정보 다 털림 ㅋㅋ' : wave <= 16 ? '반은 막았는데 털림 ㅋ' : '거의 막았는데 털림 ㅋ';
     $('goBig').textContent = big; $('goBig').dataset.t = big;
     $('apology').textContent = `저희 회사는 ${wave}번째 공격을 막지 못해 고객 여러분의 소중한 정보가 유출되었습니다. 보안담당 ${playerName()}은(는) 현재 시말서 작성 중입니다. 비밀번호는 1234에서 12345로 강화하겠습니다.`;
     $('goScore').textContent = score.toLocaleString(); $('goWave').textContent = Math.max(0, wave - 1); $('goKills').textContent = kills;
@@ -720,11 +756,11 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
   }
   function winGame(){
     state = 'won'; musicOn = false; score += kills * 5 + hp * 300; closeSheet(); $('wavebar').hidden = true;
-    $('wScore').textContent = score.toLocaleString(); if (score > best){ best = score; store.set('hk-best', best); }
+    $('wScore').textContent = score.toLocaleString(); $('wJack').textContent = jackTotal ? `> 해커 지갑 털기: +${jackTotal.toLocaleString()}점` : ''; if (score > best){ best = score; store.set('hk-best', best); }
     log('[SECURE] 해커 검거 완료. 모든 위협 차단', 'info');
-    shareText = `해커를 막아라! 10웨이브 전부 막음 🛡️ ${score.toLocaleString()}점. 보안팀 에이스 인증`;
+    shareText = `해커를 막아라! 20웨이브 전부 막음 🛡️ ${score.toLocaleString()}점 (해커 지갑에서 +${jackTotal.toLocaleString()}) 보안팀 에이스 인증`;
     setTimeout(() => { $('win').hidden = false; $('againBtn2').focus(); }, 900);
-    submitScore(score, 10, $('myRank2'));
+    submitScore(score, LAST, $('myRank2'));
   }
 
   // ================= nickname, leaderboard =================
@@ -767,7 +803,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
       const me = playerName();
       b.slice(0, 30).forEach((r, i) => { const li = document.createElement('li'); if (r.name === me) li.className = 'me';
         const rk = document.createElement('span'); rk.className = 'rk'; rk.textContent = String(i + 1).padStart(2, '0');
-        const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = r.name; const m = document.createElement('small'); m.textContent = r.wave >= 10 ? '전 웨이브 방어' : `${r.wave}웨이브`; nm.appendChild(m);
+        const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = r.name; const m = document.createElement('small'); m.textContent = r.wave >= LAST ? '전 웨이브 방어' : `${r.wave}웨이브`; nm.appendChild(m);
         const sc = document.createElement('b'); sc.textContent = r.score.toLocaleString(); li.append(rk, nm, sc); list.appendChild(li); });
     } catch(err){ note.textContent = '순위를 불러오지 못했어요'; }
   }
